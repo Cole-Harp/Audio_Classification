@@ -3,7 +3,7 @@ import numpy as np
 from scipy.io import wavfile  # get the api
 import os
 from collections import Counter
-from _plotly_utils import png
+
 
 directory = 'wavs'
 
@@ -61,9 +61,9 @@ def fft(path):
                                showarrow=False)
         return fig
 
-    for file in os.listdir('Frames'):
+    for file in os.listdir('../Frames'):
         if file.endswith('.png'):
-            os.remove(os.path.join('Frames', file))
+            os.remove(os.path.join('../Frames', file))
 
     def extract_sample(audio, frame_number):
         end = frame_number * FRAME_OFFSET
@@ -141,7 +141,7 @@ def fft(path):
 
     print(f"Max amplitude: {mx}")
 
-    # Pass 2, produce the animation
+    # Pass 2, data and maybe animation
     total_notes = []
     for frame_number in (range(FRAME_COUNT)):
         sample = extract_sample(audio, frame_number)
@@ -162,5 +162,8 @@ def fft(path):
 
     print("The 5 most common notes are:")
     for note, count in most_common_notes:
-        note = round(int(freq_to_number(note)))
+        try:
+            note = round(int(freq_to_number(note)))
+        except:
+            note = 10
         print(f"{note_name(note)}: {count} occurrences")

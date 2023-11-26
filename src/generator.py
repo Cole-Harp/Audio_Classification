@@ -5,8 +5,7 @@ s.tempo = 120
 
 piano = s.new_part("piano")
 
-
-def note_to_midi(note, octave):
+def note_to_midi(note, octave=4):
     # Define the note values
     note_values = {
         'C': 0, 'C#': 1, 'Db': 1, 'D': 2, 'D#': 3, 'Eb': 3,
@@ -19,15 +18,9 @@ def note_to_midi(note, octave):
 
     return midi_number
 
-
-print(note_to_midi("D", 9))
-
-# pitch_list = [60,64,66,69,67,64,60,57,54,54,54,55]
-# durs_list = [1.5,1.0,1.0,0.5,1.5,1.0,1.0,.5,.5,.5]
-#
-# for pitch,duration in zip(pitch_list, durs_list):
-#     piano.play_note(pitch,.8,duration)
-#
-
-# Pitch -> note
-#
+def gen_wav(file_name, notes, instrument, duration = 2.0):
+    s = Session()
+    playback_settings.recording_file_path = file_name
+    violin = s.new_part(instrument)
+    violin.play_chord(notes, 1, duration)
+    s.kill()

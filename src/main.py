@@ -5,11 +5,10 @@ Plays a C major arpeggio.
 """
 # import the scamp namespace
 from scamp import *
+from generator import note_to_midi as NM
+from generator import gen_wav as GW
 def main():
-    s = Session()
-    playback_settings.recording_file_path = "test.wav"
-    violin = s.new_part("Violin")
-    violin.play_chord([60, 64, 67, 72], 1, 1.0)
+    GW("test2.wav", [NM("C",2), NM('E'), NM("G")], "Piano")
 
 
 if __name__ == "__main__":

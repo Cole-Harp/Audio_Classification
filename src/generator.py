@@ -1,9 +1,5 @@
-from scamp import *
-
-s = Session()
-s.tempo = 120
-
-piano = s.new_part("piano")
+import scamp.simple
+from scamp import Session
 
 def note_to_midi(note, octave=4):
     # Define the note values
@@ -18,9 +14,10 @@ def note_to_midi(note, octave=4):
 
     return midi_number
 
-def gen_wav(file_name, notes, instrument, duration = 2.0):
+def gen_wav( notes, instrument, duration = 2.0):
+
     s = Session()
-    playback_settings.recording_file_path = file_name
-    violin = s.new_part(instrument)
-    violin.play_chord(notes, 1, duration)
+    inst = s.new_part(instrument)
+    inst.play_chord(notes, .9,duration)
     s.kill()
+

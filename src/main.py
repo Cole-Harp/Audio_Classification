@@ -1,6 +1,6 @@
 import argparse
 import time
-
+from vars import chords, instruments, combine_instruments_with_chords
 from feature_extraction import Data
 from generator import gen_Wav, note_arg, split_wav_from_gen
 
@@ -26,16 +26,16 @@ def main(raw_args):
     args = parser.parse_args(raw_args)
 
     GW = gen_Wav(args.outwav)
-    notes = [["C", 'E', 'G', 'F'], ['A', 'C', 'G']]
+    print(chords)
     notes_midi =[]
-    for i in range(0, len(notes)):
+    for i in range(0, len(chords)):
         notes_midi.append([])
-        for j in range(0,len(notes[i])):
-            notes_midi[i].append(note_arg(notes[i][j]))
+        for j in range(0,len(chords[i])):
+            notes_midi[i].append(note_arg(chords[i][j]))
 
-    GW.gen_multi_chords(notes_midi, "Piano")
-    GW.gen_multi_chords(notes_midi, "Violin")
-    GW.gen_multi_chords(notes_midi, "Organ")
+    for intrument in instruments:
+        GW.gen_multi_chords(notes_midi, intrument)
+
     time.sleep(10)
     d = Data('test.wav')
     d.plot()

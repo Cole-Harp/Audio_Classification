@@ -18,7 +18,7 @@ def note_arg(arg):
     if (len(note)<1 or len(note)>2):
         raise TypeError(f"not a valid note: {arg}\t Length: {len(note)}")
     elif (len(note)>1):
-        return note_to_midi(note[0],note[1])
+        return note_to_midi(note[0],int(note[1]))
     else:
         return note_to_midi(note[0], 4)
 class gen_Wav:

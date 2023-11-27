@@ -1,8 +1,8 @@
 from unittest import TestCase
-import src
+from src import main
 
 
 class Test(TestCase):
     def test_main(self):
-        args = "-o output.wav -n C,4 E,4 G,4 "
-        src.main(args)
+        args = ["-o","test1.wav",'-n', "C,3", "E,4", "G,5", "F,2"]
+        main(args)

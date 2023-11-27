@@ -43,7 +43,10 @@ class DataGen:
 def main():
     DG = DataGen()
     #print(DG.data)
-    DG.make_wav_parallel()
+    DG.data.to_pickle('wavs/data.pickle')
+    # DG.make_wav_parallel()
+
+
 
 if __name__ == "__main__":
     main()

@@ -44,35 +44,46 @@ def fft_process(index):
         # fig.tight_layout()
         # plt.show()
 
-        return (signal_f_onesided, audio)
+        return (signal_f, signal_f_onesided, audio, fs, N, y_freq)
     except:
-        return (None, None)
+        return (None, None, None, None, None, None)
 
 # def harmonic_process(index)
 
 def fft_full():
     df['audio'] = ""
+    df['true_signal'] = ""
     df['fft'] = ""
+    df['fs'] = ""
+    df['length'] = ""
+    df['y_freq'] = ""
     for index in range(len(df)):
         # print(row["filename"])
         temp = fft_process(index)
-        df.at[index, 'fft'] = temp[0]
-        df.at[index, 'audio'] = temp[1]
+        df.at[index, 'true_signal'] = temp[0]
+        df.at[index, 'fft'] = temp[1]
+        df.at[index, 'audio'] = temp[2]
+        df.at[index, 'fs'] = temp[3]
+        df.at[index, 'length'] = temp[4]
+        df.at[index, 'y_freq'] = temp[5]
+
 
 def df_print():
     print(df)
     print(df.dtypes)
-def proccess_wav():
+def proccess():
     # print(df)
     df['num_notes'] = df["notes"].apply(lambda x: len(x))
     fft_full()
     df.dropna()
     df_print()
 
+    df.to_pickle("wavs/final_data.pickle")
+
 
 
 
 if __name__ == "__main__":
-    data=pd.read_pickle('wavs/data.pickle')
-    df = data.drop(["command"], axis=1)
-    proccess_wav()
+    df =pd.read_pickle('wavs/data.pickle')
+    df = df.drop(["command"], axis=1)
+    proccess()

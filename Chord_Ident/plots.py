@@ -48,18 +48,10 @@ class Plotting:
 
         # Plotting Peaks
 
-        h = fft.max() * 5 / 100
-
         freq_50_index = np.abs(freq - 50).argmin()  # finding index for 50 Hz
         peaks = peaks[peaks > freq_50_index]  # filtering peaks less than 50 Hz
         harmonics = freq[peaks]
         print("Harmonics: {}".format(np.round(harmonics)))
-
-        # Plot
-        i = peaks.max() + 100
-        ax7.plot(freq[:i], fft[:i])
-        ax7.plot(freq[peaks], fft[peaks], "x")
-        ax7.set(xlabel='Frequency [Hz]')
 
 
         # Spectrogram plots

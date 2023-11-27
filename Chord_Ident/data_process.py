@@ -11,11 +11,12 @@ from scipy.fft import fft, fftfreq
 import os
 
 df = ""
-def fft_process(dir_path):
+def fft_process(index):
     try:
-        print(dir_path)
+        path = df.at[index,'filename']
+        print(path)
 
-        fs, data = wavfile.read(os.path.join(dir_path))  # load the data
+        fs, data = wavfile.read(os.path.join(path))  # load the data
         audio = data.T[0]  # this is a two channel soundtrack, get the first track
 
         N = len(audio)
@@ -47,19 +48,26 @@ def fft_process(dir_path):
     except:
         return (None, None)
 
+# def harmonic_process(index)
+
 def fft_full():
     df['audio'] = ""
     df['fft'] = ""
-    for index, row in df.iterrows():
+    for index in range(len(df)):
         # print(row["filename"])
-        temp = fft_process(row['filename'])
+        temp = fft_process(index)
         df.at[index, 'fft'] = temp[0]
         df.at[index, 'audio'] = temp[1]
 
+def df_print():
+    print(df)
+    print(df.dtypes)
 def proccess_wav():
     # print(df)
     df['num_notes'] = df["notes"].apply(lambda x: len(x))
     fft_full()
+    df.dropna()
+    df_print()
 
 
 

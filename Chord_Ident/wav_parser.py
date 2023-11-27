@@ -124,3 +124,4 @@ def fft(path):
         note = total_frequency(s)
         total_notes.append(note)
 
+fft('wavs/5.wav')

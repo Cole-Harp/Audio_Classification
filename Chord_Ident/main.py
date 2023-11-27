@@ -31,7 +31,7 @@ class DataGen:
         return out[:-1]
 
     def make_wav_parallel(self, max_workers=5):
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        with ThreadPoolExecutor(max_workers=10) as executor:
             futures = [executor.submit(self.run_subprocess, comd) for comd in self.data['command']]
             for future in futures:
                 future.result()
@@ -44,7 +44,7 @@ def main():
     DG = DataGen()
     #print(DG.data)
     DG.data.to_pickle('wavs/data.pickle')
-    # DG.make_wav_parallel()
+    DG.make_wav_parallel()
 
 
 

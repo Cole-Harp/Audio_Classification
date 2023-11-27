@@ -28,10 +28,10 @@ def fft_process(index):
         signal_f = fft(audio)  # Signal in frequency domain
         signal_f_onesided = 2.0 / N * np.abs(signal_f[0:N // 2])  # taking positive terms
 
-        return (signal_f_onesided, y_freq, audio)
+        return (signal_f_onesided, y_freq, audio, fs)
     except:
         print(f"error at: {index}")
-        return (None, None, None)
+        return (None, None, None, None)
 
 def harmonic_process(index):
     print(df.at[index, 'fft'])
@@ -51,6 +51,7 @@ def harmonic_full():
     for index in range(len(df)):
         df.at[index, 'peaks'] = harmonic_process(index)
 def fft_full():
+    df['fs'] = ""
     df['audio'] = ""
     df['fft'] = ""
     df['freq'] = ""
@@ -59,6 +60,7 @@ def fft_full():
         df.at[index, 'fft'] = temp[0]
         df.at[index, 'freq'] = temp[1]
         df.at[index, 'audio'] = temp[2]
+        df.at[index, 'fs'] = temp[3]
 
 def df_print():
     display(df)

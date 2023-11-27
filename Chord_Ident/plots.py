@@ -12,26 +12,6 @@ from scipy.signal import spectrogram, find_peaks
 df = ""
 
 
-def find_harmonics(path, print_peaks=False):
-    fs, X = wavfile.read(path)
-    N = len(X)
-    X_F = fft(X)
-    X_F_onesided = 2.0 / N * np.abs(X_F[0:N // 2])
-    freqs = fftfreq(N, 1 / fs)[:N // 2]
-    freqs_50_index = np.abs(freqs - 50).argmin()
-
-    h = X_F_onesided.max() * 5 / 100
-    peaks, _ = find_peaks(X_F_onesided, distance=10, height=h)
-    peaks = peaks[peaks > freqs_50_index]
-    harmonics = np.round(freqs[peaks], 2)
-
-    if print_peaks:
-        i = peaks.max() + 100
-        plt.plot(freqs[:i], X_F_onesided[:i])
-        plt.plot(freqs[peaks], X_F_onesided[peaks], "x")
-        plt.xlabel('Frequency [Hz]')
-        plt.show()
-    return harmonics
 
 
 def plot_freq_domain(y_freq, signal_f_onesided):
@@ -47,6 +27,8 @@ def plot_freq_domain(y_freq, signal_f_onesided):
     axes[1].set(xlabel='Frequency [Hz]')
     fig.tight_layout()
     plt.show()
+
+
 
 
 def plot_time_domain(time, audio, N):
@@ -77,21 +59,16 @@ def graph_spectogram(fs, audio):
 
 
 def plots(index):
-    signal = df.at[index, 'true_signal']
     audio = df.at[index, 'audio']
     fft = df.at[index, 'fft']
     fs = df.at[index, 'fs']
-    N = df.at[index, 'length']
-    y_freq = df.at[index, 'y_freq']
+    N = len(audio)
+    freq = df.at[index, 'freq']
     time = np.linspace(0., N / fs, N)
 
-    # Fourier Transform
-     # y_freq = fftfreq(N, 1 / fs)[:N // 2]  # array for frequency stamps
-    fft_onesided = 2.0 / N * np.abs(fft[0:N // 2])  # taking positive terms
+    plot_time_domain(time, audio, N)
 
-    plot_time_domain(time, signal, N)
-
-    plot_freq_domain(y_freq, fft_onesided)
+    plot_freq_domain(freq, fft)
 
     graph_spectogram(fs, audio)
 
@@ -101,6 +78,6 @@ def plots(index):
 
 
 if __name__ == "__main__":
-    df = pd.read_pickle('wavs/final_data.pickle')
+    df = pd.read_pickle('wavs/processed_data.pickle')
     print(df.dtypes)
     plots(1)

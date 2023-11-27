@@ -28,15 +28,15 @@ def fft_process(index):
         signal_f = fft(audio)  # Signal in frequency domain
         signal_f_onesided = 2.0 / N * np.abs(signal_f[0:N // 2])  # taking positive terms
 
-        return ((signal_f_onesided, y_freq),audio)
+        return (signal_f_onesided, y_freq, audio)
     except:
         print(f"error at: {index}")
-        return (None, None)
+        return (None, None, None)
 
 def harmonic_process(index):
     print(df.at[index, 'fft'])
-    signal_f_onesided = df.at[index, 'fft'][0]
-    y_freq = df.at[index, 'fft'][1]
+    signal_f_onesided = df.at[index, 'fft']
+    y_freq = df.at[index, 'freq']
     h = signal_f_onesided.max() * 5 / 100
     peaks, _ = find_peaks(signal_f_onesided, distance=10, height=h)
 
@@ -44,28 +44,21 @@ def harmonic_process(index):
     peaks = peaks[peaks > freq_50_index]  # filtering peaks less than 50 Hz
     harmonics = y_freq[peaks]
 
-    return harmonics
-
-    print("Harmonics: {}".format(np.round(harmonics)))
-
-    # Plot
-    i = peaks.max() + 100
-    plt.plot(y_freq[:i], signal_f_onesided[:i])
-    plt.plot(y_freq[peaks], signal_f_onesided[peaks], "x")
-    plt.xlabel('Frequency [Hz]')
-    plt.show()
+    return peaks
 
 def harmonic_full():
-    df['harmonics'] = ""
+    df['peaks'] = ""
     for index in range(len(df)):
-        df.at[index, 'harmonics'] = harmonic_process(index)
+        df.at[index, 'peaks'] = harmonic_process(index)
 def fft_full():
     df['audio'] = ""
     df['fft'] = ""
+    df['freq'] = ""
     for index in range(len(df)):
         temp = fft_process(index)
         df.at[index, 'fft'] = temp[0]
-        df.at[index, 'audio'] = temp[1]
+        df.at[index, 'freq'] = temp[1]
+        df.at[index, 'audio'] = temp[2]
 
 def df_print():
     display(df)
@@ -77,6 +70,7 @@ def proccess_wav():
     df.dropna(inplace=True)
     harmonic_full()
     df_print()
+    df.to_pickle('wavs/processed_data.pickle')
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 import sys
 
-import IPython
+from IPython.display import display
 import numpy as np
 import pandas as pd
 import pickle as pl
@@ -8,13 +8,14 @@ from matplotlib import pyplot as plt
 from numpy.fft import fftfreq
 from scipy.io import wavfile
 from scipy.fft import fft, fftfreq
+from scipy.signal import spectrogram, find_peaks
 import os
 
 df = ""
 def fft_process(index):
     try:
         path = df.at[index,'filename']
-        print(path)
+        #print(path)
 
         fs, data = wavfile.read(os.path.join(path))  # load the data
         audio = data.T[0]  # this is a two channel soundtrack, get the first track
@@ -27,52 +28,59 @@ def fft_process(index):
         signal_f = fft(audio)  # Signal in frequency domain
         signal_f_onesided = 2.0 / N * np.abs(signal_f[0:N // 2])  # taking positive terms
 
-        # Plotting signal in time and frequency domains
-        # fig, axes = plt.subplots(2, 2, figsize=(12, 7))
-        # axes[0, 0].plot(time, audio)
-        # axes[0, 0].set_title("Sound Wave in Time Domain (No Zoom)")
-        # axes[0, 0].set(xlabel='Time [sec]')
-        # axes[0, 1].plot(y_freq, signal_f_onesided)
-        # axes[0, 1].set_title("Sound Wave in Frequency Domain (No Zoom)")
-        # axes[0, 1].set(xlabel='Frequency [Hz]')
-        # axes[1, 0].plot(time[(N // 2):(N // 2 + 480)], audio[(N // 2):(N // 2 + 480)])
-        # axes[1, 0].set_title("Sound Wave in Time Domain (Zoomed)")
-        # axes[1, 0].set(xlabel='Time [sec]')
-        # axes[1, 1].plot(y_freq[:5000], signal_f_onesided[:5000])
-        # axes[1, 1].set_title("Sound Wave in Frequency Domain (Zoomed)")
-        # axes[1, 1].set(xlabel='Frequency [Hz]')
-        # fig.tight_layout()
-        # plt.show()
-
-        return (signal_f_onesided, audio)
+        return ((signal_f_onesided, y_freq),audio)
     except:
+        print(f"error at: {index}")
         return (None, None)
 
-# def harmonic_process(index)
+def harmonic_process(index):
+    print(df.at[index, 'fft'])
+    signal_f_onesided = df.at[index, 'fft'][0]
+    y_freq = df.at[index, 'fft'][1]
+    h = signal_f_onesided.max() * 5 / 100
+    peaks, _ = find_peaks(signal_f_onesided, distance=10, height=h)
 
+    freq_50_index = np.abs(y_freq - 50).argmin()  # finding index for 50 Hz
+    peaks = peaks[peaks > freq_50_index]  # filtering peaks less than 50 Hz
+    harmonics = y_freq[peaks]
+
+    return harmonics
+
+    print("Harmonics: {}".format(np.round(harmonics)))
+
+    # Plot
+    i = peaks.max() + 100
+    plt.plot(y_freq[:i], signal_f_onesided[:i])
+    plt.plot(y_freq[peaks], signal_f_onesided[peaks], "x")
+    plt.xlabel('Frequency [Hz]')
+    plt.show()
+
+def harmonic_full():
+    df['harmonics'] = ""
+    for index in range(len(df)):
+        df.at[index, 'harmonics'] = harmonic_process(index)
 def fft_full():
     df['audio'] = ""
     df['fft'] = ""
     for index in range(len(df)):
-        # print(row["filename"])
         temp = fft_process(index)
         df.at[index, 'fft'] = temp[0]
         df.at[index, 'audio'] = temp[1]
 
 def df_print():
-    print(df)
+    display(df)
     print(df.dtypes)
 def proccess_wav():
     # print(df)
     df['num_notes'] = df["notes"].apply(lambda x: len(x))
     fft_full()
-    df.dropna()
+    df.dropna(inplace=True)
+    harmonic_full()
     df_print()
 
 
-
-
 if __name__ == "__main__":
-    data=pd.read_pickle('wavs/data.pickle')
-    df = data.drop(["command"], axis=1)
+    df=pd.read_pickle('wavs/data.pickle')
+    df = df[0:12]
+    df = df.drop(["command"], axis=1)
     proccess_wav()

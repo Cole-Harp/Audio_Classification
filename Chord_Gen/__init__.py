@@ -1,2 +1,2 @@
-from .main import main
-from .generator import *
+
+from generator import gen_Wav, note_arg

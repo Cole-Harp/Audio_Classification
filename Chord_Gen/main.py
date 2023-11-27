@@ -3,7 +3,6 @@ import sys
 import time
 
 from .generator import gen_Wav,note_arg
-from .feature_extraction import Data
 
 
 def main(raw_args):
@@ -15,6 +14,9 @@ def main(raw_args):
 
     GW = gen_Wav(args.outwav)
     GW.gen_chord(args.notes, args.instrument)
+    time.sleep(1)
+    GW.end_session()
+    time.sleep(1)
 
 
 if __name__ == "__main__":

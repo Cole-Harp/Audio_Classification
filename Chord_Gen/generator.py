@@ -41,31 +41,31 @@ class gen_Wav:
             self.gen_chord(note_list, instrument)
 
 
-import wave
-import audioop
-
-
-def split_wav_from_gen(gen_wav):
-    #gen_wav.duration
-    split_wav(gen_wav.filename,gen_wav.chordCount,gen_wav.duration)
-def split_wav(file_name, num_chords, chord_duration):
-    with wave.open(file_name, 'rb') as w:
-        params = w.getparams()
-        framerate = w.getframerate()
-        nframes = w.getnframes()
-        audio = w.readframes(nframes)
-
-    # Calculate the number of frames per chord
-    frameStart = int(framerate*1)
-    frames_per_chord = int(framerate * chord_duration)
-
-    # Split the audio into chunks and save as separate files
-    for i in range(num_chords):
-        start = frameStart+(i * frames_per_chord)
-        end = start + frames_per_chord
-        chunk = audio[start:end]
-
-        output_filename = f"{file_name[:-4]}_chord_{i + 1}.wav"
-        with wave.open(output_filename, 'wb') as out:
-            out.setparams(params)
-            out.writeframes(chunk)
+# import wave
+# import audioop
+#
+#
+# def split_wav_from_gen(gen_wav):
+#     #gen_wav.duration
+#     split_wav(gen_wav.filename,gen_wav.chordCount,gen_wav.duration)
+# def split_wav(file_name, num_chords, chord_duration):
+#     with wave.open(file_name, 'rb') as w:
+#         params = w.getparams()
+#         framerate = w.getframerate()
+#         nframes = w.getnframes()
+#         audio = w.readframes(nframes)
+#
+#     # Calculate the number of frames per chord
+#     frameStart = int(framerate*1)
+#     frames_per_chord = int(framerate * chord_duration)
+#
+#     # Split the audio into chunks and save as separate files
+#     for i in range(num_chords):
+#         start = frameStart+(i * frames_per_chord)
+#         end = start + frames_per_chord
+#         chunk = audio[start:end]
+#
+#         output_filename = f"{file_name[:-4]}_chord_{i + 1}.wav"
+#         with wave.open(output_filename, 'wb') as out:
+#             out.setparams(params)
+#             out.writeframes(chunk)

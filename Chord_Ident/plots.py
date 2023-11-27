@@ -9,10 +9,10 @@ class Plotting:
     def __init__(self, df):
         self.df = df
 
-    def plot(self, time, audio, N, freq, fft, fs, peaks):
-        # Create a 3x2 grid of subplots
-        fig = plt.figure(figsize=(12, 8))
+    def plot(self, index, time, audio, N, freq, fft, fs, peaks):
 
+        fig = plt.figure(figsize=(12, 8))
+        fig.suptitle(f"Notes: {df.at[index, 'notes']} - Instrument: {df.at[index,'instrument']}\nIndex: {index} - Wav File: {df.at[index, 'filename']}")
         # Manually add subplots
         ax1 = fig.add_subplot(4, 2, 1)  # Top-left
         ax2 = fig.add_subplot(4, 2, 2)  # Top-right
@@ -51,7 +51,6 @@ class Plotting:
         freq_50_index = np.abs(freq - 50).argmin()  # finding index for 50 Hz
         peaks = peaks[peaks > freq_50_index]  # filtering peaks less than 50 Hz
         harmonics = freq[peaks]
-        print("Harmonics: {}".format(np.round(harmonics)))
 
 
         # Spectrogram plots
@@ -76,7 +75,7 @@ class Plotting:
         time = np.linspace(0., N / fs, N)
         peaks = self.df.at[index, 'peaks']
 
-        self.plot(time, audio, N, freq, fft, fs, peaks)
+        self.plot(index, time, audio, N, freq, fft, fs, peaks)
 
 
 if __name__ == "__main__":

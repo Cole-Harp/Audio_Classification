@@ -2,7 +2,7 @@ import argparse
 import sys
 import time
 
-from .generator import gen_Wav, note_arg
+from generator import gen_Wav, note_arg
 
 
 def main(raw_args):
@@ -14,10 +14,13 @@ def main(raw_args):
 
     GW = gen_Wav(args.outwav)
     GW.gen_chord(args.notes, args.instrument)
-    time.sleep(1)
+    #time.sleep(1)
     GW.end_session()
-    time.sleep(1)
+    #time.sleep(1)
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    # comd = ['-o', '3.wav', '-n', 'F', 'A', 'C', '-i', 'Piano']
+    # main(comd)
+    print(sys.argv)
+    main(sys.argv[1:])

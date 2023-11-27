@@ -1,2 +1,1 @@
-
-from generator import gen_Wav, note_arg
+from .generator import gen_Wav, note_arg

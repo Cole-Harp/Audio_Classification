@@ -15,8 +15,8 @@ class DataGen:
             for j in range(0,len(chords)):
                 inst = instruments[i]
                 chord = chords[j]
-                name = f"{k}.wav"
-                command = f"-o {name} -n {self.chordToCommand(chord)} -i {inst}"
+                name = f"wavs/{k}.wav"
+                command = f"-o {name} -i {inst} -n {self.chordToCommand(chord)}"
                 data_table.append([inst, chord, name, command])
                 k+=1
         df = pd.DataFrame(data=data_table)
@@ -27,12 +27,12 @@ class DataGen:
         out = ""
         for x in chord:
             out += f"{x} "
-        return out
+        return out[:-1]
 
     def make_wav(self):
         for comd in self.data['command']:
             print(comd)
-            subprocess.run(f"")
+            subprocess.run(f"Python ../Chord_Gen/main.py {comd}")
 def main():
     DG = DataGen()
     #print(DG.data)

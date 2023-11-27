@@ -1,13 +1,16 @@
+import sys
+
 import IPython
 import numpy as np
 import pandas as pd
+import pickle as pl
 from matplotlib import pyplot as plt
 from numpy.fft import fftfreq
 from scipy.io import wavfile
 from scipy.fft import fft, fftfreq
-
-
 import os
+
+df = ""
 def fft_process(dir_path):
     try:
         print(dir_path)
@@ -42,28 +45,26 @@ def fft_process(dir_path):
 
         return (signal_f_onesided, audio)
     except:
-        print("I Broke")
+        return (None, None)
 
-
-
-
-def proccess_wav(df):
-    # print(df)
-    df['num_notes'] = df["notes"].apply(lambda x: len(x))
+def fft_full():
     df['audio'] = ""
     df['fft'] = ""
     for index, row in df.iterrows():
         # print(row["filename"])
         temp = fft_process(row['filename'])
-        df.at[index,'fft'] = temp[0]
+        df.at[index, 'fft'] = temp[0]
         df.at[index, 'audio'] = temp[1]
-    print(df)
-    print(df.dtypes)
+
+def proccess_wav():
+    # print(df)
+    df['num_notes'] = df["notes"].apply(lambda x: len(x))
+    fft_full()
 
 
 
 
 if __name__ == "__main__":
     data=pd.read_pickle('wavs/data.pickle')
-    data = data.drop(["command"], axis=1)
-    proccess_wav(data)
+    df = data.drop(["command"], axis=1)
+    proccess_wav()

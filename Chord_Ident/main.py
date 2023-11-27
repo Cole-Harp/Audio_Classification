@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import subprocess
 from vars import instruments, chords
+from concurrent.futures import ThreadPoolExecutor
 
 class DataGen:
     def __init__(self):
@@ -29,14 +30,20 @@ class DataGen:
             out += f"{x} "
         return out[:-1]
 
-    def make_wav(self):
-        for comd in self.data['command']:
-            print(comd)
-            subprocess.run(f"Python ../Chord_Gen/main.py {comd}")
+    def make_wav_parallel(self, max_workers=5):
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [executor.submit(self.run_subprocess, comd) for comd in self.data['command']]
+            for future in futures:
+                future.result()
+
+    @staticmethod
+    def run_subprocess(command):
+        print(command)
+        subprocess.run(f"Python ../Chord_Gen/main.py {command}")
 def main():
     DG = DataGen()
     #print(DG.data)
-    DG.make_wav()
+    DG.make_wav_parallel()
 
 if __name__ == "__main__":
     main()

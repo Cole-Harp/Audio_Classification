@@ -10,33 +10,23 @@ def main():
     le = LabelEncoder()
     df['instrument']= le.fit_transform(df['instrument'])
     preprocessingsteps.append(le)
-    lengths_peak = []
-    lengths_chords =[]
-    for index in range(len(df)):
-        lengths_peak.append(len(df.at[index, 'peaks']))
-        lengths_chords.append(len(df.at[index, 'notes']))
-    df['peak-len'] = lengths_peak
-    df['notes-len'] = lengths_chords
-    peaks = []
     amps = []
-    freq = []
     freq2 = []
     for index in range(len(df)):
         peaks = df.at[index, 'peaks']
         freq = df.at[index, 'freq']
         amps.append(df.at[index,'fft'][peaks])
         freq2.append(df.at[index,'freq'][peaks])
-    print(peaks)
-    print(freq)
-    print(amps)
-    print(freq2)
+
+
+    df_training = DataFrame()
+    df_training['target-instrument'] = df['instrument']
+    for num_peaks in range():
+        df_training[f'peak{index}']
+        df_training[f'amp-peak{index}']
+
     plt.scatter(peaks,amps)
     plt.show()
-
-    # y-col = 'notes-len'
-    # x-col = 'peaks-top'
-    #
-    # svc = SVC()
 
 
 

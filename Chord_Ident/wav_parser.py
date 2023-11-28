@@ -7,6 +7,7 @@ import os
 from collections import Counter
 
 
+
 directory = ''
 
 # Configuration
@@ -30,6 +31,10 @@ path = "Uke_1.wav"
 
 
 def fft(path):
+    """
+    Function to parse many frames of a wav file
+    A start to multi chord parsing
+    """
     fs, data = wavfile.read(os.path.join(directory, path))  # load the data
     audio = data.T[0]  # this is a two channel soundtrack, get the first track
     FFT_WINDOW_SIZE = int(fs * FFT_WINDOW_SECONDS)

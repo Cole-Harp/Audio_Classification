@@ -5,11 +5,19 @@ from scipy.signal import spectrogram, find_peaks
 
 
 class Plotting:
+    """
+    Class for plotting various representations of audio data.
+
+    Attributes:
+    df (DataFrame): Pandas DataFrame containing audio data and related information.
+    """
 
     def __init__(self, df):
         self.df = df
 
+    @staticmethod
     def plot(self, index, time, audio, N, freq, fft, fs, peaks):
+        # TODO: Make not static so it can be prepared for more graphs
 
         fig = plt.figure(figsize=(12, 8))
         fig.suptitle(f"Notes: {df.at[index, 'notes']} - Instrument: {df.at[index,'instrument']}\nIndex: {index} - Wav File: {df.at[index, 'filename']}")
@@ -45,13 +53,6 @@ class Plotting:
         ax7.plot(freq[peaks], fft[peaks], "x")
         ax7.set_title("Peaks in Frequency Domain")
         ax7.set(xlabel='Frequency [Hz]')
-
-        # Plotting Peaks
-
-        freq_50_index = np.abs(freq - 50).argmin()  # finding index for 50 Hz
-        peaks = peaks[peaks > freq_50_index]  # filtering peaks less than 50 Hz
-        harmonics = freq[peaks]
-
 
         # Spectrogram plots
         f, t, Sxx = spectrogram(audio, fs, nperseg=10000, nfft=50000)
